@@ -10,22 +10,20 @@ def decimal_serializer(obj):
         return float(obj)  # Convert Decimal to float
     raise TypeError(f"Type {obj.__class__.__name__} not serializable")
 
-# Kafka Producer setup with custom serializer
 producer = KafkaProducer(
     bootstrap_servers='localhost:9092',
     value_serializer=lambda v: json.dumps(v, default=decimal_serializer).encode('utf-8')
 )
 
-# MySQL connection using pymysql and Docker's IP or localhost
+
 db = pymysql.connect(
-    host="127.0.0.1",  # Use the host or Docker IP address if needed
+    host="127.0.0.1",
     user="newuser",
-    password="newpassword",  # Use your correct root password
+    password="newpassword",
     database="clothes_db",
-    port=3307  # Ensure the port is correct
+    port=3307
 )
 
-# Execute SQL query and produce messages
 cursor = db.cursor()
 cursor.execute("SELECT * FROM clothes")
 
